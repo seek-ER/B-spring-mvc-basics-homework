@@ -9,7 +9,7 @@ import java.util.Map;
 
 @Service
 public class UserService {
-    private Map<Integer, UserBO> userBOMap = new HashMap<>();
+    private Map<String, UserBO> userBOMap = new HashMap<>();
 
     public void registUser(User user) {
         UserBO registUserBO = UserBO.builder()
@@ -17,6 +17,16 @@ public class UserService {
                 .password(user.getPassword())
                 .username(user.getUsername())
                 .id(userBOMap.size() + 1).build();
-        userBOMap.put(registUserBO.getId(), registUserBO);
+        userBOMap.put(registUserBO.getUsername(), registUserBO);
+    }
+
+
+    public UserBO login(String username, String password) {
+        UserBO userBO = userBOMap.get(username);
+        if (userBO.getPassword().equals(password)) {
+            return userBO;
+        } else {
+            return null;
+        }
     }
 }
