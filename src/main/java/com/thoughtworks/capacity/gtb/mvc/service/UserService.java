@@ -2,6 +2,7 @@ package com.thoughtworks.capacity.gtb.mvc.service;
 
 import com.thoughtworks.capacity.gtb.mvc.bo.UserBO;
 import com.thoughtworks.capacity.gtb.mvc.domain.User;
+import com.thoughtworks.capacity.gtb.mvc.error.PasswordNotMatchException;
 import com.thoughtworks.capacity.gtb.mvc.error.UserExistException;
 import org.springframework.stereotype.Service;
 
@@ -27,10 +28,13 @@ public class UserService {
 
     public UserBO login(String username, String password) {
         UserBO userBO = userBOMap.get(username);
+        if (userBO == null) {
+            throw new PasswordNotMatchException("用户名或密码错误");
+        }
         if (userBO.getPassword().equals(password)) {
             return userBO;
         } else {
-            return null;
+            throw new PasswordNotMatchException("用户名或密码错误");
         }
     }
 }
