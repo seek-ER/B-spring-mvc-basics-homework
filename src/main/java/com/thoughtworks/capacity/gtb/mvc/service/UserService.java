@@ -2,6 +2,7 @@ package com.thoughtworks.capacity.gtb.mvc.service;
 
 import com.thoughtworks.capacity.gtb.mvc.bo.UserBO;
 import com.thoughtworks.capacity.gtb.mvc.domain.User;
+import com.thoughtworks.capacity.gtb.mvc.error.UserExistException;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
@@ -9,9 +10,12 @@ import java.util.Map;
 
 @Service
 public class UserService {
-    private Map<String, UserBO> userBOMap = new HashMap<>();
+    private final Map<String, UserBO> userBOMap = new HashMap<>();
 
     public void registUser(User user) {
+        if (userBOMap.containsKey(user.getUsername())) {
+            throw new UserExistException("该用户已经存在");
+        }
         UserBO registUserBO = UserBO.builder()
                 .email(user.getEmail())
                 .password(user.getPassword())
